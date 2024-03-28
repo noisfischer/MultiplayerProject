@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "MultiplayerProjectCharacter.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
@@ -10,6 +8,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -66,6 +65,33 @@ void AMultiplayerProjectCharacter::BeginPlay()
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
+	}
+}
+
+void AMultiplayerProjectCharacter::OpenLobby()
+{
+	UWorld* World = GetWorld();
+
+	if(World)
+	{
+		World->ServerTravel("/Game/Maps/Lobby?listen");
+	}
+}
+
+// Option 1 for traveling to a level
+void AMultiplayerProjectCharacter::CallOpenLevel(const FString& Address)
+{
+	UGameplayStatics::OpenLevel(this, *Address);	// *Address is a C-style string
+}
+
+// Option 2 for traveling to a level
+void AMultiplayerProjectCharacter::CallClientTravel(const FString& Address)
+{
+	APlayerController* PlayerController = GetGameInstance()->GetFirstLocalPlayerController();
+
+	if(PlayerController)
+	{
+		PlayerController->ClientTravel(Address, TRAVEL_Absolute);
 	}
 }
 
