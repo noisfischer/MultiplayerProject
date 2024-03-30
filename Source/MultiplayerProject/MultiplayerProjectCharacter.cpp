@@ -130,12 +130,13 @@ void AMultiplayerProjectCharacter::CreateGameSession()	// Called when pressing t
 	SessionSettings->bAllowJoinViaPresence = true;	// Enables ability to join players only your region
 	SessionSettings->bUsesPresence = true;	// Enables ability to check for players within your region
 	SessionSettings->bShouldAdvertise = true;	// Allows steam to make your session visible for other players to join
+	SessionSettings->bUseLobbiesIfAvailable = true;
 	
 	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController(); // Player One
 	OnlineSessionInterface->CreateSession(*LocalPlayer->GetPreferredUniqueNetId(), NAME_GameSession, *SessionSettings);
 }
 
-// Callback that verifies that session has been created
+// Callback that verifies that session has been created (bound in first line of constructor
 void AMultiplayerProjectCharacter::OnCreateSessionComplete(FName SessionName, bool bWasSuccessful)
 {
 	if(bWasSuccessful)
