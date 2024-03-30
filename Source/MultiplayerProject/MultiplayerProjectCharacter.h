@@ -88,11 +88,17 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void CreateGameSession();
 
-	// parameters required by FOnCreateSessionCompleteDelegate
-	void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
+	UFUNCTION(BlueprintCallable)
+	void JoinGameSession();
 
+	// parameters required by corresponding delegates from IOnlineSession
+	void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
+	void OnFindSessionsComplete(bool bWasSuccessful);
+	
 private:
 	// this delegate type is from the IOnlineSession interface
 	FOnCreateSessionCompleteDelegate CreateSessionCompleteDelegate;
+	FOnFindSessionsCompleteDelegate FindSessionsCompleteDelegate;
+	TSharedPtr<FOnlineSessionSearch> SessionSearch;
 };
 

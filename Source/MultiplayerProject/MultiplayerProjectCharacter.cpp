@@ -11,12 +11,14 @@
 #include "Kismet/GameplayStatics.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSessionSettings.h"
+#include "Online/OnlineSessionNames.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 AMultiplayerProjectCharacter::AMultiplayerProjectCharacter():
-	// Initialize the CreateSessionCompleteDelegate variable with an object of this type and bind the function we created in this class to it
-	CreateSessionCompleteDelegate(FOnCreateSessionCompleteDelegate::CreateUObject(this, &ThisClass::OnCreateSessionComplete))
+	// Bind our own functions to the corresponding delegates from IOnlineSession
+	CreateSessionCompleteDelegate(FOnCreateSessionCompleteDelegate::CreateUObject(this, &ThisClass::OnCreateSessionComplete)),
+	FindSessionsCompleteDelegate(FOnFindSessionsCompleteDelegate::CreateUObject(this, &ThisClass::OnFindSessionsComplete))
 {
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 		
@@ -120,7 +122,7 @@ void AMultiplayerProjectCharacter::CreateGameSession()	// Called when pressing t
 		OnlineSessionInterface->DestroySession(NAME_GameSession);
 	}
 
-	// Adds our CreateSessionCompleteDelegate to the IOnlineSession interface
+	// Adds our CreateSessionCompleteDelegate to the IOnlineSession interface delegates list
 	OnlineSessionInterface->AddOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegate);
 	
 	TSharedPtr<FOnlineSessionSettings> SessionSettings = MakeShareable(new FOnlineSessionSettings());
@@ -134,6 +136,27 @@ void AMultiplayerProjectCharacter::CreateGameSession()	// Called when pressing t
 	
 	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController(); // Player One
 	OnlineSessionInterface->CreateSession(*LocalPlayer->GetPreferredUniqueNetId(), NAME_GameSession, *SessionSettings);
+}
+
+void AMultiplayerProjectCharacter::JoinGameSession()
+{
+	// Find game sessions
+
+	if(!OnlineSessionInterface.IsValid())
+	{
+		return;
+	}
+
+	// Adds our FindSessionsCompleteDelegate to the IOnlineSession interface delegates list
+	OnlineSessionInterface->AddOnFindSessionsCompleteDelegate_Handle(FindSessionsCompleteDelegate);
+
+	SessionSearch = MakeShareable(new FOnlineSessionSearch());
+	SessionSearch->MaxSearchResults = 10000;
+	SessionSearch->bIsLanQuery = false;
+	SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
+	
+	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController(); // Player One
+	OnlineSessionInterface->FindSessions(*LocalPlayer->GetPreferredUniqueNetId(), SessionSearch.ToSharedRef());
 }
 
 // Callback that verifies that session has been created (bound in first line of constructor
@@ -157,6 +180,24 @@ void AMultiplayerProjectCharacter::OnCreateSessionComplete(FName SessionName, bo
 				15.f,
 				FColor::Red,
 				FString(TEXT("Failed to create session!"))
+				);
+		}
+	}
+}
+
+void AMultiplayerProjectCharacter::OnFindSessionsComplete(bool bWasSuccessful)
+{
+	for(auto Result: SessionSearch->SearchResults)
+	{
+		FString Id = Result.GetSessionIdStr();
+		FString User = Result.Session.OwningUserName;
+		if(GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(
+				-1,
+				15.f,
+				FColor::Cyan,
+				FString::Printf(TEXT("Id: %s, User: %s"), *Id, *User)
 				);
 		}
 	}
