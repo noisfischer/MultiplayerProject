@@ -91,14 +91,17 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void JoinGameSession();
 
+	// CALLBACK FUNCTIONS
 	// parameters required by corresponding delegates from IOnlineSession
 	void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
 	void OnFindSessionsComplete(bool bWasSuccessful);
+	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 	
 private:
 	// this delegate type is from the IOnlineSession interface
 	FOnCreateSessionCompleteDelegate CreateSessionCompleteDelegate;
 	FOnFindSessionsCompleteDelegate FindSessionsCompleteDelegate;
 	TSharedPtr<FOnlineSessionSearch> SessionSearch;
+	FOnJoinSessionCompleteDelegate JoinSessionCompleteDelegate;
 };
 
