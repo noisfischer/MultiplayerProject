@@ -2,7 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Interfaces/OnlineSessionDelegates.h"
 #include "Logging/LogMacros.h"
+#include "Interfaces/OnlineSessionInterface.h"
 #include "MultiplayerProjectCharacter.generated.h"
 
 class USpringArmComponent;
@@ -68,6 +70,8 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+
+	// FOR LAN CONNECTION
 	UFUNCTION(BlueprintCallable)
 	void OpenLobby();
 
@@ -78,7 +82,17 @@ public:
 	void CallClientTravel(const FString& Address);
 	
 public:
-	// pointer to online session interface
-	TSharedPtr<class IOnlineSession, ESPMode::ThreadSafe> OnlineSessionInterface;
+	IOnlineSessionPtr OnlineSessionInterface;
+	
+protected:
+	UFUNCTION(BlueprintCallable)
+	void CreateGameSession();
+
+	// parameters required by FOnCreateSessionCompleteDelegate
+	void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
+
+private:
+	// this delegate type is from the IOnlineSession interface
+	FOnCreateSessionCompleteDelegate CreateSessionCompleteDelegate;
 };
 
