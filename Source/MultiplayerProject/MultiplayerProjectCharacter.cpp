@@ -124,6 +124,13 @@ void AMultiplayerProjectCharacter::CreateGameSession()	// Called when pressing t
 	OnlineSessionInterface->AddOnCreateSessionCompleteDelegate_Handle(CreateSessionCompleteDelegate);
 	
 	TSharedPtr<FOnlineSessionSettings> SessionSettings = MakeShareable(new FOnlineSessionSettings());
+	SessionSettings->bIsLANMatch = false;
+	SessionSettings->NumPublicConnections = 4;	// How many players are allowed to connect
+	SessionSettings->bAllowJoinInProgress = true;
+	SessionSettings->bAllowJoinViaPresence = true;	// Enables ability to join players only your region
+	SessionSettings->bUsesPresence = true;	// Enables ability to check for players within your region
+	SessionSettings->bShouldAdvertise = true;	// Allows steam to make your session visible for other players to join
+	
 	const ULocalPlayer* LocalPlayer = GetWorld()->GetFirstLocalPlayerFromController(); // Player One
 	OnlineSessionInterface->CreateSession(*LocalPlayer->GetPreferredUniqueNetId(), NAME_GameSession, *SessionSettings);
 }
