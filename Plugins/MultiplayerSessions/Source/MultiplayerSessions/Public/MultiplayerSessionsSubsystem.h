@@ -39,6 +39,7 @@ private:
 	//
 	// To add to the online session interface delegate list
 	// We'll bind our MultiplayerSessionsSubsystem internal callbacks to these
+	// FDelegateHandle's will be used to clear delegates from the online session interface delegates list once used
 	//
 	FOnCreateSessionCompleteDelegate CreateSessionCompleteDelegate;
 	FDelegateHandle CreateSessionCompleteDelegateHandle;
