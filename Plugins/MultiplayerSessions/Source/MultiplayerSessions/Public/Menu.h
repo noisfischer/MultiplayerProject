@@ -17,6 +17,7 @@ public:
 
 protected:
 	virtual bool Initialize() override;
+	virtual void NativeDestruct() override;
 	
 private:
 	// UPROPERTY meta means our UButton's must have the same name as the
@@ -30,6 +31,8 @@ private:
 	void HostButtonClicked();
 	UFUNCTION()
 	void JoinButtonClicked();
+
+	void MenuTearDown();
 
 	// Subsystem designed to handle all online session functionality
 	class UMultiplayerSessionsSubsystem* MultiplayerSessionsSubsystem;
