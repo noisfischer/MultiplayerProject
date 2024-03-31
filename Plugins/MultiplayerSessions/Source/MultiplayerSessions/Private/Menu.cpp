@@ -101,6 +101,26 @@ void UMenu::OnCreateSession(bool bWasSuccessful)
 	}
 }
 
+void UMenu::OnFindSessions(const TArray<FOnlineSessionSearchResult>& SessionResults, bool bWasSuccessful)
+{
+	
+}
+
+void UMenu::OnJoinSession(EOnJoinSessionCompleteResult::Type Result)
+{
+	
+}
+
+void UMenu::OnDestroySession(bool bWasSuccessful)
+{
+	
+}
+
+void UMenu::OnStartSession(bool bWasSuccessful)
+{
+	
+}
+
 void UMenu::HostButtonClicked()
 {
 	if(MultiplayerSessionsSubsystem)
