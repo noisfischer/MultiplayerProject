@@ -18,6 +18,11 @@ public:
 protected:
 	virtual bool Initialize() override;
 	virtual void NativeDestruct() override;
+
+	//
+	// Callbacks for the custom delegates on the MultiplayerSessionsSubsystem
+	//
+	void OnCreateSession(bool bWasSuccessful);
 	
 private:
 	// UPROPERTY meta means our UButton's must have the same name as the
