@@ -55,7 +55,8 @@ AMultiplayerProjectCharacter::AMultiplayerProjectCharacter():
 	{
 		OnlineSessionInterface = OnlineSubsystem->GetSessionInterface();
 
-		if(GEngine)
+		/*
+		 *if(GEngine)
 		{
 			GEngine->AddOnScreenDebugMessage(
 				-1,
@@ -64,6 +65,7 @@ AMultiplayerProjectCharacter::AMultiplayerProjectCharacter():
 				FString::Printf(TEXT("Found subsystem %s"), *OnlineSubsystem->GetSubsystemName().ToString())
 				);
 		}
+		*/
 	}
 }
 
