@@ -3,6 +3,7 @@
 #include "Menu.h"
 #include "Components/Button.h"
 #include "MultiplayerSessionsSubsystem.h"
+#include "OnlineSessionSettings.h"
 
 void UMenu::MenuSetup(int32 NumberOfPublicConnections, FString TypeOfMatch)
 {
@@ -135,14 +136,9 @@ void UMenu::HostButtonClicked()
 
 void UMenu::JoinButtonClicked()
 {
-	if(GEngine)
+	if(MultiplayerSessionsSubsystem)
 	{
-		GEngine->AddOnScreenDebugMessage(
-			-1,
-			15.f,
-			FColor::Yellow,
-			FString(TEXT("Join Button Clicked"))
-		);
+		MultiplayerSessionsSubsystem->FindSessions(10000);
 	}
 }
 
