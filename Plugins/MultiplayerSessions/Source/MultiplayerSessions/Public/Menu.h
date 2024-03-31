@@ -22,6 +22,7 @@ protected:
 	//
 	// Callbacks for the custom delegates on the MultiplayerSessionsSubsystem
 	//
+	UFUNCTION()
 	void OnCreateSession(bool bWasSuccessful);
 	
 private:
