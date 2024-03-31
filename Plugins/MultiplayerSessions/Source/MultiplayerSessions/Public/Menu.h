@@ -14,5 +14,21 @@ class MULTIPLAYERSESSIONS_API UMenu : public UUserWidget
 public:
 	UFUNCTION(BlueprintCallable)
 	void MenuSetup();
+
+protected:
+	virtual bool Initialize() override;
+	
+private:
+	// UPROPERTY meta means our UButton's must have the same name as the
+	// buttons in the widget blueprint that uses this class
+	UPROPERTY(meta = (BindWidget))
+	class UButton* HostButton;	// class for forward declaration
+	UPROPERTY(meta = (BindWidget))
+	UButton* JoinButton;
+
+	UFUNCTION()
+	void HostButtonClicked();
+	UFUNCTION()
+	void JoinButtonClicked();
 	
 };

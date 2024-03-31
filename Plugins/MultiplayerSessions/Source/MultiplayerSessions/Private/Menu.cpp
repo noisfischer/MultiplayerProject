@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Menu.h"
+#include "Components/Button.h"
 
 void UMenu::MenuSetup()
 {
@@ -20,5 +21,51 @@ void UMenu::MenuSetup()
 			PlayerController->SetInputMode(InputModeData);
 			PlayerController->SetShowMouseCursor(true);
 		}
+	}
+}
+
+bool UMenu::Initialize()
+{
+	if(!Super::Initialize()) // by default returns false
+	{
+		return false;
+	}
+
+	// Bind functions to OnClicked delegate events
+	if(HostButton)
+	{
+		HostButton->OnClicked.AddDynamic(this, &ThisClass::HostButtonClicked);
+	}
+	if(JoinButton)
+	{
+		JoinButton->OnClicked.AddDynamic(this, &ThisClass::JoinButtonClicked);
+	}
+	
+	return true;
+}
+
+void UMenu::HostButtonClicked()
+{
+	if(GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(
+			-1,
+			15.f,
+			FColor::Yellow,
+			FString(TEXT("Host Button Clicked"))
+		);
+	}
+}
+
+void UMenu::JoinButtonClicked()
+{
+	if(GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(
+			-1,
+			15.f,
+			FColor::Yellow,
+			FString(TEXT("Join Button Clicked"))
+		);
 	}
 }
